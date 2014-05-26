@@ -9,7 +9,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class BagOfWordsModel {
-	HashMap<String, Long> dictionaryMap;
+
+	public HashMap<String, Long> dictionaryMap;
 
 	public static void main(String[] args) throws IOException {
 		File filePointer = new File("phrases.txt");
@@ -35,12 +36,14 @@ public class BagOfWordsModel {
 		System.out.println("Starting generation of Dictionary......");
 		tempDictMap = generateDictionary(phrasesFileStream);
 		System.out.println("Dictionary Generation Completed!");
+		int dictionarySize = tempDictMap.size();
 
 	}
 
 	private static HashMap<String, Long> generateDictionary(
 			FileInputStream phrasesFileStream) throws IOException {
 		HashMap<String, Long> tempMap = new HashMap<String, Long>();
+		long value = 1;
 
 		// TODO Auto-generated method stub
 		// TODO Auto-generated method stub
@@ -52,7 +55,6 @@ public class BagOfWordsModel {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine;
 		String[] components;
-		long value = 1;
 		// Read File Line By Line
 		while ((strLine = br.readLine()) != null) {
 			// Print the content on the console
@@ -61,9 +63,11 @@ public class BagOfWordsModel {
 			// System.out.println(components[2]);
 			// out.write(components[2] + "\n");
 			for (String words : components) {
-				if (!tempMap.containsKey(words)) {
-					tempMap.put(words, value);
-					value++;
+				if (!cleanWord(words).equals("null")) {
+					if (!tempMap.containsKey(words)) {
+						tempMap.put(words, value);
+						value++;
+					}
 				}
 			}
 
@@ -71,6 +75,18 @@ public class BagOfWordsModel {
 
 		return tempMap;
 
+	}
+
+	private static String cleanWord(String wordContent) {
+		wordContent = wordContent.replace("\n", "null");
+		wordContent = wordContent.replace(".", "null");
+		wordContent = wordContent.replace("!", "null");
+		wordContent = wordContent.replace("-", "null");
+		wordContent = wordContent.replace("_", "null");
+		wordContent = wordContent.replace(",", "null");
+		wordContent = wordContent.replace("   ", "null");
+		wordContent = wordContent.replace("  ", "null");
+		return wordContent;
 	}
 
 	private static void extractPhrasesFromTrainingSet() {
