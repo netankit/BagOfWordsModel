@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class BagOfWordsModel {
 
-	public HashMap<String, Long> dictionaryMap;
+	public HashMap<String, Double> dictionaryMap;
 
 	public static void main(String[] args) throws IOException {
 		File filePointer = new File("phrases.txt");
@@ -38,7 +38,7 @@ public class BagOfWordsModel {
 
 	private static void generateBagOfWords(FileInputStream phrasesFileStream)
 			throws IOException {
-		HashMap<String, Long> tempDictMap = new HashMap<String, Long>();
+		HashMap<String, Double> tempDictMap = new HashMap<String, Double>();
 		FileWriter fwstream = new FileWriter("BagOfWordsRepresentation.txt");
 		BufferedWriter out = new BufferedWriter(fwstream);
 
@@ -47,6 +47,7 @@ public class BagOfWordsModel {
 		System.out.println("Dictionary Generation Completed!");
 		int dictionarySize = tempDictMap.size();
 		System.out.println("Dictionary Size: " + dictionarySize);
+		System.out.println("=====================");
 
 		phrasesFileStream = new FileInputStream("phrases.txt");
 		// Get the object of DataInputStream
@@ -55,39 +56,23 @@ public class BagOfWordsModel {
 				inStream));
 		String strLine;
 		String[] components;
-		HashMap<String, Integer> bagOfWordsMap = new HashMap<String, Integer>();
+
+		HashMap<String, Double> bagOfWordsMap = new HashMap<String, Double>(
+				tempDictMap.size());
 		// Read File Line By Line
 		while ((strLine = brStream.readLine()) != null) {
+			for (String tempKey : tempDictMap.keySet()) {
+				bagOfWordsMap.put(tempKey, (double) 0);
+			}
 			// Print the content on the console
 			components = strLine.split(" ");
-			for (String words : components) {
-				int frequencyCount = 0;
-				if (!cleanWord(words).equals("null")) {
-					for (String key : tempDictMap.keySet()) {
-						if ((key.equals(words))) {
-							if (!bagOfWordsMap.containsKey(words)) {
-								bagOfWordsMap.put(words, frequencyCount++);
-							} else {
-								frequencyCount = bagOfWordsMap.get(words);
-								bagOfWordsMap.put(key, frequencyCount++);
-							}
-						} else {
-							if (!bagOfWordsMap.containsKey(words)) {
-								bagOfWordsMap.put(words, frequencyCount);
-							} else {
-								frequencyCount = bagOfWordsMap.get(words);
-								bagOfWordsMap.put(words, frequencyCount++);
-							}
-						}
-					}
-
-				}
+			for (String word : components) {
+				bagOfWordsMap.put(word, bagOfWordsMap.get(word) + 1);
 			}
 			String bagOfWordsLine = "";
-			for (int value : bagOfWordsMap.values()) {
+			for (double value : bagOfWordsMap.values()) {
 				bagOfWordsLine = bagOfWordsLine + value + ", ";
 			}
-			System.out.println(bagOfWordsLine);
 			bagOfWordsLine = bagOfWordsLine.trim();
 			if (bagOfWordsLine.length() != 0) {
 				bagOfWordsLine = bagOfWordsLine.substring(0,
@@ -97,7 +82,9 @@ public class BagOfWordsModel {
 
 			// One line read
 			out.write(bagOfWordsLine);
-			// bagOfWordsMap.clear();
+			for (String tempKey : bagOfWordsMap.keySet()) {
+				bagOfWordsMap.put(tempKey, (double) 0);
+			}
 
 		}
 		inStream.close();
@@ -106,10 +93,10 @@ public class BagOfWordsModel {
 
 	}
 
-	private static HashMap<String, Long> generateDictionary(
+	private static HashMap<String, Double> generateDictionary(
 			FileInputStream phrasesFileStream) throws IOException {
-		HashMap<String, Long> tempMap = new HashMap<String, Long>();
-		long value = 1;
+		HashMap<String, Double> tempMap = new HashMap<String, Double>();
+		double value = 1;
 
 		FileWriter fwstream = new FileWriter("GeneratedDictionary.txt");
 		BufferedWriter outPtr = new BufferedWriter(fwstream);
@@ -135,9 +122,9 @@ public class BagOfWordsModel {
 		}
 		in.close();
 		String dictLine = "";
-		for (Map.Entry<String, Long> entry : tempMap.entrySet()) {
+		for (Map.Entry<String, Double> entry : tempMap.entrySet()) {
 			String keyDict = entry.getKey();
-			Long valueDict = entry.getValue();
+			double valueDict = entry.getValue();
 			dictLine = dictLine + "\"" + keyDict + "\": " + valueDict + ",\n";
 		}
 
@@ -150,14 +137,14 @@ public class BagOfWordsModel {
 	}
 
 	private static String cleanWord(String wordContent) {
-		// wordContent = wordContent.replace("\n", "null");
-		// wordContent = wordContent.replace(".", "null");
-		// wordContent = wordContent.replace("!", "null");
-		// wordContent = wordContent.replace("-", "null");
-		// wordContent = wordContent.replace("_", "null");
-		// wordContent = wordContent.replace(",", "null");
-		// wordContent = wordContent.replace("   ", "null");
-		// wordContent = wordContent.replace("  ", "null");
+		wordContent = wordContent.replace("\n", "null");
+		wordContent = wordContent.replace(".", "null");
+		wordContent = wordContent.replace("!", "null");
+		wordContent = wordContent.replace("-", "null");
+		wordContent = wordContent.replace("_", "null");
+		wordContent = wordContent.replace(",", "null");
+		wordContent = wordContent.replace("   ", "null");
+		wordContent = wordContent.replace("  ", "null");
 		return wordContent;
 	}
 
