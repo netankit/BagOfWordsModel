@@ -82,9 +82,7 @@ public class BagOfWordsModel {
 
 			// One line read
 			out.write(bagOfWordsLine);
-			for (String tempKey : bagOfWordsMap.keySet()) {
-				bagOfWordsMap.put(tempKey, (double) 0);
-			}
+			bagOfWordsMap.clear();
 
 		}
 		inStream.close();
@@ -111,12 +109,12 @@ public class BagOfWordsModel {
 			// Print the content on the console
 			components = strLine.split(" ");
 			for (String words : components) {
-				if (!cleanWord(words).equals("null")) {
-					if (!tempMap.containsKey(words)) {
-						tempMap.put(words, value);
-						value++;
-					}
+				// if (!cleanWord(words).equals("null")) {
+				if (!tempMap.containsKey(words)) {
+					tempMap.put(words, value);
+					value++;
 				}
+				// }
 			}
 
 		}
