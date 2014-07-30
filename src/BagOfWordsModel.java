@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class BagOfWordsModel {
 
-	public HashMap<String, Double> dictionaryMap;
+	public HashMap<String, Integer> dictionaryMap;
 
 	public static void main(String[] args) throws IOException {
-		File filePointer = new File("test_phrases.txt");
+		File filePointer = new File("phrases_all.txt");
 
 		if (!filePointer.exists()) {
 			extractPhrasesFromTrainingSet();
@@ -29,7 +29,7 @@ public class BagOfWordsModel {
 	private static void startModelling() throws FileNotFoundException,
 			IOException {
 		FileInputStream phrasesFileStream = new FileInputStream(
-				"test_phrases.txt");
+				"phrases_all.txt");
 		System.out.println("phrases.txt -- File exists!");
 		// BagofWords
 		System.out
@@ -39,8 +39,8 @@ public class BagOfWordsModel {
 
 	private static void generateBagOfWords(FileInputStream phrasesFileStream)
 			throws IOException {
-		HashMap<String, Double> tempDictMap = new HashMap<String, Double>();
-		FileWriter fwstream = new FileWriter("bow_test.txt");
+		HashMap<String, Integer> tempDictMap = new HashMap<String, Integer>();
+		FileWriter fwstream = new FileWriter("bow_model.txt");
 		BufferedWriter out = new BufferedWriter(fwstream);
 
 		System.out.println("Starting generation of Dictionary......");
@@ -50,7 +50,7 @@ public class BagOfWordsModel {
 		System.out.println("Dictionary Size: " + dictionarySize);
 		System.out.println("=====================");
 
-		phrasesFileStream = new FileInputStream("test_phrases.txt");
+		phrasesFileStream = new FileInputStream("phrases_all.txt");
 		// Get the object of DataInputStream
 		DataInputStream inStream = new DataInputStream(phrasesFileStream);
 		BufferedReader brStream = new BufferedReader(new InputStreamReader(
@@ -58,14 +58,14 @@ public class BagOfWordsModel {
 		String strLine;
 		String[] components;
 
-		HashMap<String, Double> bagOfWordsMap = new HashMap<String, Double>(
+		HashMap<String, Integer> bagOfWordsMap = new HashMap<String, Integer>(
 				tempDictMap.size());
-		double count = 1;
+		int count = 1;
 		// Read File Line By Line
 		while ((strLine = brStream.readLine()) != null) {
 
 			for (String tempKey : tempDictMap.keySet()) {
-				bagOfWordsMap.put(tempKey, (double) 0);
+				bagOfWordsMap.put(tempKey, 0);
 			}
 			// Print the content on the console
 			components = strLine.split(" ");
@@ -73,7 +73,7 @@ public class BagOfWordsModel {
 				bagOfWordsMap.put(word, bagOfWordsMap.get(word) + 1);
 			}
 			String bagOfWordsLine = "";
-			for (double value : bagOfWordsMap.values()) {
+			for (int value : bagOfWordsMap.values()) {
 				bagOfWordsLine = bagOfWordsLine + value + " ";
 			}
 			bagOfWordsLine = bagOfWordsLine.trim();
@@ -82,11 +82,11 @@ public class BagOfWordsModel {
 						bagOfWordsLine.length() - 1);
 			}
 			// bagOfWordsLine = "[" + bagOfWordsLine + "]\n";
-			System.out.println("Line Number:" + count);
+			System.out.println("Line Number: " + count);
 			count++;
 
 			// One line read
-			out.write(bagOfWordsLine);
+			out.write(bagOfWordsLine + "\n");
 			bagOfWordsMap.clear();
 		}
 		inStream.close();
@@ -95,10 +95,10 @@ public class BagOfWordsModel {
 
 	}
 
-	private static HashMap<String, Double> generateDictionary(
+	private static HashMap<String, Integer> generateDictionary(
 			FileInputStream phrasesFileStream) throws IOException {
-		HashMap<String, Double> tempMap = new HashMap<String, Double>();
-		double value = 1;
+		HashMap<String, Integer> tempMap = new HashMap<String, Integer>();
+		int value = 1;
 
 		FileWriter fwstream = new FileWriter("GeneratedDictionary.txt");
 		BufferedWriter outPtr = new BufferedWriter(fwstream);
@@ -124,13 +124,13 @@ public class BagOfWordsModel {
 		}
 		in.close();
 		String dictLine = "";
-		for (Map.Entry<String, Double> entry : tempMap.entrySet()) {
+		for (Map.Entry<String, Integer> entry : tempMap.entrySet()) {
 			String keyDict = entry.getKey();
-			double valueDict = entry.getValue();
-			dictLine = dictLine + "\"" + keyDict + "\": " + valueDict + ",\n";
+			int valueDict = entry.getValue();
+			dictLine = dictLine + " " + keyDict + " " + valueDict + "\n";
 		}
 
-		outPtr.write("{\n" + dictLine + "}");
+		outPtr.write(dictLine);
 		outPtr.close();
 		in.close();
 
@@ -155,9 +155,10 @@ public class BagOfWordsModel {
 		try {
 			// Open the file that is the first
 			// command line parameter
-			FileInputStream fstream = new FileInputStream("test.tsv");
+			FileInputStream fstream = new FileInputStream(
+					"train_and_test_data.tsv");
 
-			FileWriter fwstream = new FileWriter("phrases_test_1.txt");
+			FileWriter fwstream = new FileWriter("phrases_all.txt");
 			BufferedWriter out = new BufferedWriter(fwstream);
 
 			// Get the object of DataInputStream
