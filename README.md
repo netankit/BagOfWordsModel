@@ -9,9 +9,9 @@ word is used as a feature for training a classifier.
 
 NOTE: Don't use this in production or in evaluation experiments as this was done long time back as a fun activity.
 
-Moreover, Scikit learn provides a much poptimized version for this task. Please refer here: 
+Moreover, Scikit learn provides a much optimized version for this task. Please refer here: 
 
-CountVectorizer : http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html
+Count Vectorizer : http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html
 
 and
 
